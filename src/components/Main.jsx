@@ -93,7 +93,7 @@ export const Main = (props) => {
             {isLoading1 == false ? <></> :
               nft_list.map(v => 
                 <div className='col-sm-12 col-md-6 col-lg-4'>
-                  <p>Title: {v.metadata.title}</p>
+                  <p>{v.metadata.title}</p>
                   <img src = {v.metadata.media} alt = "" width = "100%" />
                 </div>
               )
