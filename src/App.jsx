@@ -30,7 +30,7 @@ const App = () => {
       "nft_app7.testnet",
       {
         viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
-        changeMethods: ["nft_mint", "near_mint"],
+        changeMethods: ["nft_mint"],
         sender: wallet.getAccountId(),
       }
     );

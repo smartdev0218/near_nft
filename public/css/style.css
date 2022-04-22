@@ -206,7 +206,6 @@ a:focus, .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:acti
 .main {
 	padding: 100px 0;
 	background-image: url(../background.jpg);
-	
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-attachment: fixed;

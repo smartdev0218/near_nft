@@ -28,11 +28,11 @@ export const Main = (props) => {
       "nft_app7.testnet",
       {
         viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
-        changeMethods: ["near_mint"],
+        changeMethods: ["nft_mint"],
         sender: wallet.getAccountId(),
       }
     );
-    setTotal(await contract.nft_total_supply() - 1);
+    setTotal(await contract.nft_total_supply());
     const mine = await contract.nft_tokens_for_owner({account_id: wallet.getAccountId()});
     setMine(mine.length);
     for(var i = 0; i < mine.length; i ++) {
@@ -50,17 +50,18 @@ export const Main = (props) => {
         "nft_app7.testnet",
         {
           viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
-          changeMethods: ["near_mint"],
+          changeMethods: ["nft_mint"],
           sender: wallet.account(),
         }
       );
-      const links = "https://bafybeiaxy7wpx65llffkqunta527pbbzjs6jkzdip6ikodcl767n4osfsu.ipfs.nftstorage.link/assets/" + (nft_total_supply + 1).toString() + ".gif";
+      const links = "https://bafybeiaxy7wpx65llffkqunta527pbbzjs6jkzdip6ikodcl767n4osfsu.ipfs.nftstorage.link/assets/" + (parseInt(nft_total_supply) + 1).toString() + ".gif";
       console.log(links + ", " + props.accountId);
-      await contract.near_mint(
+      await contract.nft_mint(
         {
+          token_id: (parseInt(nft_total_supply) + 1).toString(),
           metadata: {
-            title: "NFT " + (nft_total_supply + 1).toString(),
-            description: "Near Non-Fungible-Token " + (nft_total_supply + 1).toString(),
+            title: "NFT " + (parseInt(nft_total_supply) + 1).toString(),
+            description: "Near Non-Fungible-Token " + (parseInt(nft_total_supply) + 1).toString(),
             media: links,
             copies: 1
           },
@@ -85,6 +86,9 @@ export const Main = (props) => {
           <div className='main-items'>
             <div className='col-sm-12 col-md-12 col-lg-12'>
               <button type = 'button' className = 'btn btn-warning btn-block' onClick = {onMint}>Mint</button>
+            </div>
+            <div className="col text-center">
+              <p style = {{fontSize: '45px'}}>Your NFT collection</p><br/><br/><br/><br/>
             </div>
             {isLoading1 == false ? <></> :
               nft_list.map(v => 
