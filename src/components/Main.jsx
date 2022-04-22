@@ -4,8 +4,6 @@ import * as nearAPI from "near-api-js";
 export const Main = (props) => {
   const { connect, KeyPair, keyStores, WalletConnection} = nearAPI;
   const [nft_mine, setMine] = useState(0);
-  const [nft_title, setTitle] = useState("");
-  const [nft_des, setDescription] = useState("");
   const [nft_list, setList] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isLoading1, setLoading1] = useState(false);
@@ -43,43 +41,35 @@ export const Main = (props) => {
     setLoading1(true);
     console.log(mine);
   }, [isLoading])
-  
-  const getTitle = (e) => {
-    setTitle(e.target.value);
-  }
-
-  const getDescription = (e) => {
-    setDescription(e.target.value);
-  }
 
   const onMint = async () => {
-    const near = await connect(config);
-    const wallet =  new WalletConnection(near);
-    const contract = await new nearAPI.Contract(
-      wallet.account(),
-      "nft_app7.testnet",
-      {
-        viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
-        changeMethods: ["near_mint"],
-        sender: wallet.account(),
-      }
-    );
-    const links = "https://bafybeiaxy7wpx65llffkqunta527pbbzjs6jkzdip6ikodcl767n4osfsu.ipfs.nftstorage.link/assets/" + (nft_total_supply + 1).toString() + ".gif";
-    console.log(links + ", " + props.accountId);
-    await contract.near_mint(
-      {
-        metadata: {
-          title: nft_title,
-          description: nft_des,
-          media: links,
-          copies: 1
-        },
-        receiver_id: props.accountId
-      }, 
-      "300000000000000", 
-      "5000000000000000000000000"
-    );
-    setLoading(true);
+      const near = await connect(config);
+      const wallet =  new WalletConnection(near);
+      const contract = await new nearAPI.Contract(
+        wallet.account(),
+        "nft_app7.testnet",
+        {
+          viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
+          changeMethods: ["near_mint"],
+          sender: wallet.account(),
+        }
+      );
+      const links = "https://bafybeiaxy7wpx65llffkqunta527pbbzjs6jkzdip6ikodcl767n4osfsu.ipfs.nftstorage.link/assets/" + (nft_total_supply + 1).toString() + ".gif";
+      console.log(links + ", " + props.accountId);
+      await contract.near_mint(
+        {
+          metadata: {
+            title: "NFT " + (nft_total_supply + 1).toString(),
+            description: "Near Non-Fungible-Token " + (nft_total_supply + 1).toString(),
+            media: links,
+            copies: 1
+          },
+          receiver_id: props.accountId
+        }, 
+        "300000000000000", 
+        "5000000000000000000000000"
+      );
+      setLoading(true);
   }
 
   return (
@@ -93,12 +83,6 @@ export const Main = (props) => {
         </div>
         <div className='row'>
           <div className='main-items'>
-            <div className='col-sm-6 col-md-6 col-lg-6'>
-              <p>Title</p><input type = 'text' className = 'form-control' value = {nft_title} onChange = {getTitle} />
-            </div>
-            <div className='col-sm-6 col-md-6 col-lg-6'>
-              <p>Description</p><input type = 'text' className = 'form-control' value = {nft_des} onChange = {getDescription} />
-            </div>
             <div className='col-sm-12 col-md-12 col-lg-12'>
               <button type = 'button' className = 'btn btn-warning btn-block' onClick = {onMint}>Mint</button>
             </div>
