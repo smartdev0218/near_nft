@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import * as nearAPI from "near-api-js";
 import { Wlaccount } from "./Wlaccount";
+import { ReactNotifications, Store } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 export const Main = (props) => {
   const { connect, KeyPair, keyStores, WalletConnection} = nearAPI;
@@ -52,8 +54,8 @@ export const Main = (props) => {
   }
 
   const onMint = async () => {
-    const wl_time1 = new Date("Apr 26, 2022 18:00:00 UTC").getTime();
-    const wl_time2 = new Date("Apr 26, 2022 19:00:00 UTC").getTime();
+    const wl_time1 = new Date("Apr 26, 2022 19:00:00 UTC").getTime();
+    const wl_time2 = new Date("Apr 26, 2022 20:00:00 UTC").getTime();
     const currentTime = new Date().getTime();
 
     const near = await connect(config);
@@ -92,11 +94,35 @@ export const Main = (props) => {
           setLoading(true);
         }
         else {
-          alert("All NFT is sold out.");
+          Store.addNotification({
+            title: "Warning!",
+            message: "All NFTs are sold out.",
+            type: "default",
+            insert: "top-right",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 5000,
+              onScreen: true
+            }
+          });
         }
       }
       else {
-        alert("You are not whitelist account!");
+        Store.addNotification({
+          title: "Warning!",
+          message: "You are not whitelist account.",
+          type: "default",
+          insert: "top-right",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 5000,
+            onScreen: true
+          }
+        });
       }
     }
     else if(currentTime > wl_time2) {
@@ -121,16 +147,41 @@ export const Main = (props) => {
         setLoading(true);
       }
       else {
-        alert("All NFT is sold out.");
+        Store.addNotification({
+          title: "Warning!",
+          message: "All NFTs are sold out.",
+          type: "default",
+          insert: "top-right",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 5000,
+            onScreen: true
+          }
+        });
       }
     }
     else {
-      alert("Mint is not live now.");
+      Store.addNotification({
+        title: "Warning!",
+        message: "Mint is not live now.",
+        type: "default",
+        insert: "top-right",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true
+        }
+      });
     }
   }
 
   return (
     <div className='main text-center'>
+      <ReactNotifications />
       <div className='container'>
         <div className='section-title'>
           <h2>{props.accountId}</h2>
@@ -147,10 +198,10 @@ export const Main = (props) => {
               <p style = {{fontSize: '45px'}}>Your NFT collection</p><br/><br/><br/><br/>
             </div>
             {isLoading1 == false ? <></> :
-              nft_list.map(v => 
-                <div className='col-sm-12 col-md-6 col-lg-4'>
+              nft_list.map((v, i) => 
+                <div className='col-sm-12 col-md-6 col-lg-4' key = {i}>
                     <p>{v.metadata.title}</p>
-                    <img src = {v.metadata.media} alt = "" width = "100%" />
+                    <img src = {v.metadata.media} alt = "Flipping Coin" width = "100%" />
                 </div>
               )
             }
