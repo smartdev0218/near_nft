@@ -57,7 +57,7 @@ export const Navigation = (props) => {
             <span className='icon-bar'></span>{' '}
           </button>
           <a className='navbar-brand page-scroll' href='#'>
-            NFT
+            Flipping Coin NFT
           </a>{' '}
         </div>
 

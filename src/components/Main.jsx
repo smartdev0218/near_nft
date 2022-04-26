@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import * as nearAPI from "near-api-js";
+import { Wlaccount } from "./Wlaccount";
 
 export const Main = (props) => {
   const { connect, KeyPair, keyStores, WalletConnection} = nearAPI;
@@ -39,10 +40,10 @@ export const Main = (props) => {
       nft_list.push(mine[i]);
     }
     setLoading1(true);
-    console.log(mine);
   }, [isLoading])
 
   const onMint = async () => {
+    if(nft_total_supply <= 500) {
       const near = await connect(config);
       const wallet =  new WalletConnection(near);
       const contract = await new nearAPI.Contract(
@@ -51,26 +52,33 @@ export const Main = (props) => {
         {
           viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
           changeMethods: ["nft_mint"],
-          sender: wallet.account(),
+          sender: wallet.getAccountId(),
         }
       );
-      const links = "https://bafybeiaxy7wpx65llffkqunta527pbbzjs6jkzdip6ikodcl767n4osfsu.ipfs.nftstorage.link/assets/" + (parseInt(nft_total_supply) + 1).toString() + ".gif";
+      const links = "https://bafybeid7bdbmx3g2z27lo6oy6zed5fqhw7slh4ozcupxbncd2bvgwsusme.ipfs.nftstorage.link/assets/" + (parseInt(nft_total_supply) + 1).toString() + ".gif";
       console.log(links + ", " + props.accountId);
       await contract.nft_mint(
         {
           token_id: (parseInt(nft_total_supply) + 1).toString(),
           metadata: {
-            title: "NFT " + (parseInt(nft_total_supply) + 1).toString(),
-            description: "Near Non-Fungible-Token " + (parseInt(nft_total_supply) + 1).toString(),
+            title: "Flipping Coin " + (parseInt(nft_total_supply) + 1).toString(),
+            description: "Flipping Coin is a casino project that will share revenue with holders in NEAR (3% out of the 3.5% fees). They have a coin flip ready on the day they opened their discord and plan to build more games in the future. they will collab and build coinflips for the others NEAR projects , the revenue will be split 50/50",
             media: links,
             copies: 1
           },
-          receiver_id: props.accountId
+          receiver_id: props.accountId,
+          perpetual_royalties: {
+            "coin-flip.testnet": 999
+          }
         }, 
         "300000000000000", 
         "5000000000000000000000000"
       );
       setLoading(true);
+    }
+    else {
+      alert("All NFT is sold out.");
+    }
   }
 
   return (
