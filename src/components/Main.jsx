@@ -42,42 +42,90 @@ export const Main = (props) => {
     setLoading1(true);
   }, [isLoading])
 
+  const checkAccount = () => {
+    for(var i = 0; i < Wlaccount.length; i++) {
+      if(Wlaccount[i] == props.accountId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const onMint = async () => {
-    if(nft_total_supply <= 500) {
-      const near = await connect(config);
-      const wallet =  new WalletConnection(near);
-      const contract = await new nearAPI.Contract(
-        wallet.account(),
-        "nft_app7.testnet",
-        {
-          viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
-          changeMethods: ["nft_mint"],
-          sender: wallet.getAccountId(),
+    const wl_time1 = new Date("Apr 26, 2022 18:00:00 UTC").getTime();
+    const wl_time2 = new Date("Apr 26, 2022 19:00:00 UTC").getTime();
+    const currentTime = new Date().getTime();
+
+    const near = await connect(config);
+    const wallet =  new WalletConnection(near);
+    const contract = await new nearAPI.Contract(
+      wallet.account(),
+      "nft_app7.testnet",
+      {
+        viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
+        changeMethods: ["nft_mint"],
+        sender: wallet.getAccountId(),
+      }
+    );
+    const links = "https://bafybeid7bdbmx3g2z27lo6oy6zed5fqhw7slh4ozcupxbncd2bvgwsusme.ipfs.nftstorage.link/assets/" + (parseInt(nft_total_supply) + 1).toString() + ".gif";
+    
+    if(currentTime >= wl_time1 && currentTime <= wl_time2) {
+      if(checkAccount()) {
+        if(nft_total_supply <= 500) {
+          await contract.nft_mint(
+            {
+              token_id: (parseInt(nft_total_supply) + 1).toString(),
+              metadata: {
+                title: "Flipping Coin " + (parseInt(nft_total_supply) + 1).toString(),
+                description: "Flipping Coin is a casino project that will share revenue with holders in NEAR (3% out of the 3.5% fees). They have a coin flip ready on the day they opened their discord and plan to build more games in the future. they will collab and build coinflips for the others NEAR projects , the revenue will be split 50/50",
+                media: links,
+                copies: 1
+              },
+              receiver_id: props.accountId,
+              perpetual_royalties: {
+                "coin-flip.testnet": 999
+              }
+            }, 
+            "300000000000000", 
+            "5000000000000000000000000"
+          );
+          setLoading(true);
         }
-      );
-      const links = "https://bafybeid7bdbmx3g2z27lo6oy6zed5fqhw7slh4ozcupxbncd2bvgwsusme.ipfs.nftstorage.link/assets/" + (parseInt(nft_total_supply) + 1).toString() + ".gif";
-      console.log(links + ", " + props.accountId);
-      await contract.nft_mint(
-        {
-          token_id: (parseInt(nft_total_supply) + 1).toString(),
-          metadata: {
-            title: "Flipping Coin " + (parseInt(nft_total_supply) + 1).toString(),
-            description: "Flipping Coin is a casino project that will share revenue with holders in NEAR (3% out of the 3.5% fees). They have a coin flip ready on the day they opened their discord and plan to build more games in the future. they will collab and build coinflips for the others NEAR projects , the revenue will be split 50/50",
-            media: links,
-            copies: 1
-          },
-          receiver_id: props.accountId,
-          perpetual_royalties: {
-            "coin-flip.testnet": 999
-          }
-        }, 
-        "300000000000000", 
-        "5000000000000000000000000"
-      );
-      setLoading(true);
+        else {
+          alert("All NFT is sold out.");
+        }
+      }
+      else {
+        alert("You are not whitelist account!");
+      }
+    }
+    else if(currentTime > wl_time2) {
+      if(nft_total_supply <= 500) {
+        await contract.nft_mint(
+          {
+            token_id: (parseInt(nft_total_supply) + 1).toString(),
+            metadata: {
+              title: "Flipping Coin " + (parseInt(nft_total_supply) + 1).toString(),
+              description: "Flipping Coin is a casino project that will share revenue with holders in NEAR (3% out of the 3.5% fees). They have a coin flip ready on the day they opened their discord and plan to build more games in the future. they will collab and build coinflips for the others NEAR projects , the revenue will be split 50/50",
+              media: links,
+              copies: 1
+            },
+            receiver_id: props.accountId,
+            perpetual_royalties: {
+              "coin-flip.testnet": 999
+            }
+          }, 
+          "300000000000000", 
+          "5000000000000000000000000"
+        );
+        setLoading(true);
+      }
+      else {
+        alert("All NFT is sold out.");
+      }
     }
     else {
-      alert("All NFT is sold out.");
+      alert("Mint is not live now.");
     }
   }
 
@@ -101,8 +149,8 @@ export const Main = (props) => {
             {isLoading1 == false ? <></> :
               nft_list.map(v => 
                 <div className='col-sm-12 col-md-6 col-lg-4'>
-                  <p>{v.metadata.title}</p>
-                  <img src = {v.metadata.media} alt = "" width = "100%" />
+                    <p>{v.metadata.title}</p>
+                    <img src = {v.metadata.media} alt = "" width = "100%" />
                 </div>
               )
             }
