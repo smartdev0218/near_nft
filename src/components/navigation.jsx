@@ -66,12 +66,15 @@ export const Navigation = (props) => {
           id='bs-example-navbar-collapse-1'
         >
           <ul className='nav navbar-nav navbar-right'>
-            <li>
-              {!account_id ?
-                <a className='page-scroll' onClick = {connectButton}>Connect</a> : 
-                <a className='page-scroll' onClick = {disconnectButton}>Disconnect</a>
-              }
-            </li>
+            {props.days * 24 * 3600 + props.hours * 3600 + props.minutes * 60 + props.seconds > 0 ?
+              <></> :
+              <li>
+                {!account_id ?
+                  <a className='page-scroll' onClick = {connectButton}>Connect</a> : 
+                  <a className='page-scroll' onClick = {disconnectButton}>Disconnect</a>
+                }
+              </li>
+            }
           </ul>
         </div>
       </div>

@@ -143,6 +143,19 @@ hr {
 	overflow: hidden;
 	text-align: center;
 }
+
+.section-title h1 {
+	position: relative;
+	margin-top: 10px;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	font-size: 50px;
+	color: #222;
+	overflow: hidden;
+	text-align: center;
+	font-weight: bold;
+}
+
 .section-title h2::after {
 	position: absolute;
 	content: "";

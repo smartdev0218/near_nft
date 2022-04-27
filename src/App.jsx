@@ -12,6 +12,10 @@ export const scroll = new SmoothScroll('a[href*="#"]', {
 
 const App = () => {
   const [account_id, setAccount] = useState("");
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const { connect, KeyPair, keyStores, WalletConnection} = nearAPI;
 
   const config = {
@@ -35,11 +39,21 @@ const App = () => {
       }
     );
     setAccount(wallet.getAccountId());
+
+    const interval = setInterval(() => {
+        const distance = new Date("Apr 27, 2022 13:49:00 UTC") - new Date().getTime();
+        setDays(Math.floor(distance / (1000 * 60 * 60 * 24)));
+        setHours(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+        setMinutes(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
+        setSeconds(Math.floor((distance % (1000 * 60)) / 1000));
+      return () => clearInterval(interval);
+    }, 1000);
   })
+
   return (
     <div>
-      <Navigation />
-      {account_id ? <Main accountId = {account_id}/> : <Login />}
+      <Navigation days = {days} hours = {hours} minutes = {minutes} seconds = {seconds} />
+      {account_id ? <Main accountId = {account_id}/> : <Login days = {days} hours = {hours} minutes = {minutes} seconds = {seconds} />}
     </div>
   )
 }
