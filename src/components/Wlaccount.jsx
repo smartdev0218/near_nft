@@ -1,4 +1,5 @@
 export const Wlaccount = [
+    "nft_app4.testnet",
     "evky.near",	
     "kaboom3161.near",	
     "nearty.near",	

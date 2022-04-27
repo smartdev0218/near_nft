@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import * as nearAPI from "near-api-js";
-import { Wlaccount } from "./Wlaccount";
 import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
+import { Wlaccount } from "./Wlaccount";
 
 export const Main = (props) => {
   const { connect, KeyPair, keyStores, WalletConnection} = nearAPI;
@@ -54,8 +54,8 @@ export const Main = (props) => {
   }
 
   const onMint = async () => {
-    const wl_time1 = new Date("Apr 26, 2022 19:00:00 UTC").getTime();
-    const wl_time2 = new Date("Apr 26, 2022 20:00:00 UTC").getTime();
+    const wl_time1 = new Date("Apr 29, 2022 19:00:00 UTC").getTime();
+    const wl_time2 = new Date("Apr 29, 2022 20:00:00 UTC").getTime();
     const currentTime = new Date().getTime();
 
     const near = await connect(config);
@@ -74,24 +74,43 @@ export const Main = (props) => {
     if(currentTime >= wl_time1 && currentTime <= wl_time2) {
       if(checkAccount()) {
         if(nft_total_supply <= 500) {
-          await contract.nft_mint(
-            {
-              token_id: (parseInt(nft_total_supply) + 1).toString(),
-              metadata: {
-                title: "Flipping Coin " + (parseInt(nft_total_supply) + 1).toString(),
-                description: "Flipping Coin is a casino project that will share revenue with holders in NEAR (3% out of the 3.5% fees). They have a coin flip ready on the day they opened their discord and plan to build more games in the future. they will collab and build coinflips for the others NEAR projects , the revenue will be split 50/50",
-                media: links,
-                copies: 1
-              },
-              receiver_id: props.accountId,
-              perpetual_royalties: {
-                "coin-flip.testnet": 999
+
+          const mine_total = await contract.nft_tokens_for_owner({account_id: wallet.getAccountId()});
+          if(mine_total < 1) {
+            await contract.nft_mint(
+              {
+                token_id: (parseInt(nft_total_supply) + 1).toString(),
+                metadata: {
+                  title: "Flipping Coin " + (parseInt(nft_total_supply) + 1).toString(),
+                  description: "Flipping Coin is a casino project that will share revenue with holders in NEAR (3% out of the 3.5% fees). They have a coin flip ready on the day they opened their discord and plan to build more games in the future. they will collab and build coinflips for the others NEAR projects , the revenue will be split 50/50",
+                  media: links,
+                  copies: 1
+                },
+                receiver_id: props.accountId,
+                perpetual_royalties: {
+                  "coin-flip.testnet": 999
+                }
+              }, 
+              "300000000000000", 
+              "5000000000000000000000000"
+            );
+            setLoading(true);
+          }
+          else {
+            Store.addNotification({
+              title: "Warning!",
+              message: "Whitelist accounts can mint only one NFT.",
+              type: "default",
+              insert: "top-right",
+              container: "top-right",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 5000,
+                onScreen: true
               }
-            }, 
-            "300000000000000", 
-            "5000000000000000000000000"
-          );
-          setLoading(true);
+            });
+          }
         }
         else {
           Store.addNotification({
