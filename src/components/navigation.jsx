@@ -24,7 +24,7 @@ export const Navigation = (props) => {
     const near = await connect(config);
     const wallet = new WalletConnection(near);
     wallet.requestSignIn(
-      {contractId: "nft_app7.testnet", methodNames: ["nft_mint"]},
+      {contractId: "near_nft.testnet", methodNames: ["nft_mint"]},
       "App",
       null,
       null

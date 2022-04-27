@@ -31,7 +31,7 @@ const App = () => {
     const wallet =  new WalletConnection(near);
     const contract = await new nearAPI.Contract(
       wallet.account(),
-      "nft_app7.testnet",
+      "near_nft.testnet",
       {
         viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
         changeMethods: ["nft_mint"],
@@ -41,7 +41,7 @@ const App = () => {
     setAccount(wallet.getAccountId());
 
     const interval = setInterval(() => {
-        const distance = new Date("Apr 29, 2022 19:00:00 UTC") - new Date().getTime();
+        const distance = new Date("Apr 27, 2022 15:00:00 UTC") - new Date().getTime();
         setDays(Math.floor(distance / (1000 * 60 * 60 * 24)));
         setHours(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
         setMinutes(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));

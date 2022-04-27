@@ -28,7 +28,7 @@ export const Main = (props) => {
     const wallet =  new WalletConnection(near);
     const contract = await new nearAPI.Contract(
       wallet.account(),
-      "nft_app7.testnet",
+      "near_nft.testnet",
       {
         viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
         changeMethods: ["nft_mint"],
@@ -54,15 +54,15 @@ export const Main = (props) => {
   }
 
   const onMint = async () => {
-    const wl_time1 = new Date("Apr 29, 2022 19:00:00 UTC").getTime();
-    const wl_time2 = new Date("Apr 29, 2022 20:00:00 UTC").getTime();
+    const wl_time1 = new Date("Apr 27, 2022 15:00:00 UTC").getTime();
+    const wl_time2 = new Date("Apr 27, 2022 16:00:00 UTC").getTime();
     const currentTime = new Date().getTime();
 
     const near = await connect(config);
     const wallet =  new WalletConnection(near);
     const contract = await new nearAPI.Contract(
       wallet.account(),
-      "nft_app7.testnet",
+      "near_nft.testnet",
       {
         viewMethods: ["nft_total_supply", "nft_tokens_for_owner"],
         changeMethods: ["nft_mint"],
@@ -76,7 +76,7 @@ export const Main = (props) => {
         if(nft_total_supply <= 500) {
 
           const mine_total = await contract.nft_tokens_for_owner({account_id: wallet.getAccountId()});
-          if(mine_total < 1) {
+          if(mine_total < 1 || props.accountId == "vandammefc.near") {
             await contract.nft_mint(
               {
                 token_id: (parseInt(nft_total_supply) + 1).toString(),
@@ -100,7 +100,7 @@ export const Main = (props) => {
             Store.addNotification({
               title: "Warning!",
               message: "Whitelist accounts can mint only one NFT.",
-              type: "default",
+              type: "danger",
               insert: "top-right",
               container: "top-right",
               animationIn: ["animate__animated", "animate__fadeIn"],
@@ -131,8 +131,8 @@ export const Main = (props) => {
       else {
         Store.addNotification({
           title: "Warning!",
-          message: "You are not whitelist account.",
-          type: "default",
+          message: "You are not whitelist account. From 19:00 to 20 is for whitelist account",
+          type: "warning",
           insert: "top-right",
           container: "top-right",
           animationIn: ["animate__animated", "animate__fadeIn"],
@@ -181,21 +181,6 @@ export const Main = (props) => {
         });
       }
     }
-    else {
-      Store.addNotification({
-        title: "Warning!",
-        message: "Mint is not live now.",
-        type: "default",
-        insert: "top-right",
-        container: "top-right",
-        animationIn: ["animate__animated", "animate__fadeIn"],
-        animationOut: ["animate__animated", "animate__fadeOut"],
-        dismiss: {
-          duration: 5000,
-          onScreen: true
-        }
-      });
-    }
   }
 
   return (
@@ -214,7 +199,7 @@ export const Main = (props) => {
               <button type = 'button' className = 'btn btn-warning btn-block' onClick = {onMint}>Mint</button>
             </div>
             <div className="col text-center">
-              <p style = {{fontSize: '45px'}}>Your NFT collection</p><br/><br/><br/><br/>
+            <p style = {{fontSize: '45px'}}>Your NFT collection</p><br/><br/><br/><br/><br/>
             </div>
             {isLoading1 == false ? <></> :
               nft_list.map((v, i) => 
