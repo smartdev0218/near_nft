@@ -54,8 +54,8 @@ export const Main = (props) => {
   }
 
   const onMint = async () => {
-    const wl_time1 = new Date("Apr 27, 2022 15:00:00 UTC").getTime();
-    const wl_time2 = new Date("Apr 27, 2022 16:00:00 UTC").getTime();
+    const wl_time1 = new Date("Apr 29, 2022 19:00:00 UTC").getTime();
+    const wl_time2 = new Date("Apr 29, 2022 20:00:00 UTC").getTime();
     const currentTime = new Date().getTime();
 
     const near = await connect(config);

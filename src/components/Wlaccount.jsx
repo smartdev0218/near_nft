@@ -319,4 +319,5 @@ export const Wlaccount = [
     "tonknani.near",
     "Metameech.near",
     "43b32e6690c486b36d6d4e8cac517d0b90e43d0c9e158e6117b35f4efc8edec4",
+    "707b6ccd525bfd996ec09cf2b12447ffd1760730be9b18ec253dad70361dbccc",
 ]
